@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="discrete_point">#000000</color>
+    <color name="indicator">#ff009688</color>
+    <color name="progress_color">#ff009688</color>
+    <color name="track_text">#8a000000</color>
+</resources>

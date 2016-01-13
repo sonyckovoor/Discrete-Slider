@@ -28,6 +28,22 @@
         />
 
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/dsbTemp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_weight="1"
+        app:dsb_TextSize="14sp"
+        app:dsb_TextStyle="extremes"
+        app:dsb_discretePointsColor="@color/discrete_point"
+        app:dsb_discretePointsEnabled="true"
+        app:dsb_indicatorColor="@color/indicator"
+        app:dsb_indicatorTextFromArray="true"
+        app:dsb_progressColor="@color/progress_color"
+        app:dsb_textColor="@color/track_text"
+        app:dsb_value="5" />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

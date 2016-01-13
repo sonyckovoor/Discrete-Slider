@@ -83,7 +83,7 @@ You can also use the attribute **discreteSeekBarStyle** on your themes with a cu
 
 ##License
 ```
-Copyright 2014 Gustavo Claramunt (Ander Webbs)
+Copyright 2014 Sony Cyriac
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
