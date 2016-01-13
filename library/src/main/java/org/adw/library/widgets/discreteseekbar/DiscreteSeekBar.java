@@ -21,7 +21,9 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
@@ -32,6 +34,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -46,6 +49,7 @@ import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
 import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
 import org.adw.library.widgets.discreteseekbar.internal.drawable.TrackRectDrawable;
 
+import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
@@ -146,9 +150,13 @@ public class DiscreteSeekBar extends View {
     private boolean mMirrorForRtl = false;
     private boolean mAllowTrackClick = true;
     private boolean mIndicatorPopupEnabled = true;
+    private boolean mDiscretePointsEnabled = false;
+    private boolean mDiscretePointsShowOnTouch = false;
+    private boolean mDiscretePointsShowAlways = false;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
+    private boolean mIndicatorTextFromArray = false;
     private NumericTransformer mNumericTransformer;
     private StringBuilder mFormatBuilder;
     private OnProgressChangeListener mPublicChangeListener;
@@ -163,6 +171,78 @@ public class DiscreteSeekBar extends View {
     private int mAnimationTarget;
     private float mDownX;
     private float mTouchSlop;
+
+    private Paint mDiscretePoints, mDiscretePointsTran;
+    private int mtextColor = Color.BLACK;
+    int mTextSize = 9;
+    int mTextPaddingTop = 3;
+    int textStyle = 0;
+
+    /**
+     * Indicates that no text will be shown on the the view.
+     *
+     * @see #getTextStyle()
+     * @see #setTextStyle(int)
+     * @see #NONE
+     * @see #ODD
+     * @see #EVEN
+     * @see #EXTREMES
+     * @see #ALL
+     */
+    public static final int NONE = 0;
+    /**
+     * Indicates that odd text will be shown on the the view.
+     *
+     * @see #getTextStyle()
+     * @see #setTextStyle(int)
+     * @see #NONE
+     * @see #ODD
+     * @see #EVEN
+     * @see #EXTREMES
+     * @see #ALL
+     */
+    public static final int ODD = 1;
+    /**
+     * Indicates that even text will be shown on the the view.
+     *
+     * @see #getTextStyle()
+     * @see #setTextStyle(int)
+     * @see #NONE
+     * @see #ODD
+     * @see #EVEN
+     * @see #EXTREMES
+     * @see #ALL
+     */
+    public static final int EVEN = 2;
+    /**
+     * Indicates that extreme text will be shown on the the view.
+     *
+     * @see #getTextStyle()
+     * @see #setTextStyle(int)
+     * @see #NONE
+     * @see #ODD
+     * @see #EVEN
+     * @see #EXTREMES
+     * @see #ALL
+     */
+    public static final int EXTREMES = 3;
+    /**
+     * Indicates that all text will be shown on the the view.
+     *
+     * @see #getTextStyle()
+     * @see #setTextStyle(int)
+     * @see #NONE
+     * @see #ODD
+     * @see #EVEN
+     * @see #EXTREMES
+     * @see #ALL
+     */
+    public static final int ALL = 4;
+
+    private int halfSize = 1;
+    private RectF position;
+
+    private String[] textArray;
 
     public DiscreteSeekBar(Context context) {
         this(context, null);
@@ -196,6 +276,7 @@ public class DiscreteSeekBar extends View {
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
         mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
+        mIndicatorTextFromArray = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorTextFromArray, mIndicatorTextFromArray);
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
         int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
         int indexValue = R.styleable.DiscreteSeekBar_dsb_value;
@@ -230,9 +311,19 @@ public class DiscreteSeekBar extends View {
 
         mIndicatorFormatter = a.getString(R.styleable.DiscreteSeekBar_dsb_indicatorFormatter);
 
+        mDiscretePointsEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_discretePointsEnabled, false);
+        mDiscretePointsShowAlways = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_discretePointsShowAlways, false);
+
         ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_trackColor);
         ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_progressColor);
         ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_rippleColor);
+        int discretePointColor = a.getColor(R.styleable.DiscreteSeekBar_dsb_discretePointsColor, Color.RED);
+
+        mtextColor = a.getColor(R.styleable.DiscreteSeekBar_dsb_textColor, Color.BLACK);
+        mTextSize = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_TextSize, mTextSize);
+        mTextPaddingTop = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_TextSize, mTextPaddingTop);
+        textStyle = a.getInt(R.styleable.DiscreteSeekBar_dsb_TextStyle, textStyle);
+
         boolean editMode = isInEditMode();
         if (editMode || rippleColor == null) {
             rippleColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.DKGRAY});
@@ -242,6 +333,10 @@ public class DiscreteSeekBar extends View {
         }
         if (editMode || progressColor == null) {
             progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{DEFAULT_THUMB_COLOR});
+        }
+        if (editMode) {
+            discretePointColor = Color.RED;
+            mtextColor = Color.BLACK;
         }
         mRipple = SeekBarCompat.getRipple(rippleColor);
         if (isLollipopOrGreater) {
@@ -263,6 +358,16 @@ public class DiscreteSeekBar extends View {
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
 
+        textArray = new String[((mMax - mMin) + 1)];
+
+        int j = mMin;
+        for (int i = 0; i < ((mMax - mMin) + 1); i++) {
+            if (j <= mMax) {
+                textArray[i] = j + "";
+                j++;
+            } else
+                break;
+        }
 
         if (!editMode) {
             mIndicator = new PopupIndicator(context, attrs, defStyleAttr, convertValueToMessage(mMax));
@@ -272,6 +377,23 @@ public class DiscreteSeekBar extends View {
 
         setNumericTransformer(new DefaultNumericTransformer());
 
+        mDiscretePoints = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mDiscretePoints.setColor(discretePointColor);
+        mDiscretePoints.setStyle(Paint.Style.FILL);
+        mDiscretePointsTran = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mDiscretePointsTran.setColor(Color.TRANSPARENT);
+        mDiscretePointsTran.setStyle(Paint.Style.FILL_AND_STROKE);
+        position = new RectF();
+
+    }
+
+    public void setTextValues(String[] textArray) {
+        if (textArray.length < 2)
+            return;
+        this.textArray = textArray;
+        setMax(textArray.length - 1);
+        setMin(0);
+        invalidate();
     }
 
     /**
@@ -384,6 +506,23 @@ public class DiscreteSeekBar extends View {
         setProgress(progress, false);
     }
 
+    /**
+     * Sets the current progress for this DiscreteSeekBar
+     * The supplied argument should be present in the array of values
+     *
+     * @param value
+     * @see #setTextValues(String[])
+     */
+    public void setValue(String value) {
+/*        for (int i=0;i<textArray.length;i++) {
+            if (textArray[i].equals(value)) {
+                setProgress(i);
+                break;
+            }
+        }*/
+        setProgress(Arrays.asList(textArray).indexOf(value) + mMin);
+    }
+
     private void setProgress(int value, boolean fromUser) {
         value = Math.max(mMin, Math.min(mMax, value));
         if (isAnimationRunning()) {
@@ -405,6 +544,14 @@ public class DiscreteSeekBar extends View {
      */
     public int getProgress() {
         return mValue;
+    }
+    /**
+     * Get the value set on the progress bar
+     *
+     * @return the current value :-P
+     */
+    public String getValue() {
+        return textArray[mValue];
     }
 
     /**
@@ -482,6 +629,33 @@ public class DiscreteSeekBar extends View {
         mTrack.setColorStateList(colorStateList);
     }
 
+    public void setDiscretePointsEnabled(boolean discretePointsEnabled){
+        this.mDiscretePointsEnabled=discretePointsEnabled;
+    }
+
+    public void setDiscretePointsShowAlways(boolean discretePointsShowAlways){
+        this.mDiscretePointsShowAlways=discretePointsShowAlways;
+    }
+    public void setTextColor(int c){
+        this.mtextColor=c;
+    }
+
+    public void setTextSize(int size){
+        this.mTextSize=size;
+    }
+
+    public void setTextPaddingTop(int size){
+        this.mTextPaddingTop=size;
+    }
+
+    public void setTextStyle(int type){
+        this.textStyle=type;
+    }
+
+    public int getTextStyle(){
+        return this.textStyle;
+    }
+
     /**
      * If {@code enabled} is false the indicator won't appear. By default popup indicator is
      * enabled.
@@ -550,6 +724,12 @@ public class DiscreteSeekBar extends View {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int height = mThumb.getIntrinsicHeight() + getPaddingTop() + getPaddingBottom();
         height += (mAddedTouchBounds * 2);
+        if (textStyle == NONE) {
+
+        } else {
+            height += mTextSize;
+            height += mTextPaddingTop;
+        }
         setMeasuredDimension(widthSize, height);
     }
 
@@ -580,13 +760,14 @@ public class DiscreteSeekBar extends View {
         int paddingLeft = getPaddingLeft() + addedThumb;
         int paddingRight = getPaddingRight();
         int bottom = getHeight() - getPaddingBottom() - addedThumb;
-        mThumb.setBounds(paddingLeft, bottom - thumbHeight, paddingLeft + thumbWidth, bottom);
+        int top = getPaddingTop() + addedThumb;
+        mThumb.setBounds(paddingLeft, top, paddingLeft + thumbWidth, top + thumbHeight);
         int trackHeight = Math.max(mTrackHeight / 2, 1);
-        mTrack.setBounds(paddingLeft + halfThumb, bottom - halfThumb - trackHeight,
-                getWidth() - halfThumb - paddingRight - addedThumb, bottom - halfThumb + trackHeight);
+        mTrack.setBounds(paddingLeft + halfThumb, top + halfThumb-trackHeight,
+                getWidth() - halfThumb - paddingRight - addedThumb, top + halfThumb + trackHeight);
         int scrubberHeight = Math.max(mScrubberHeight / 2, 2);
-        mScrubber.setBounds(paddingLeft + halfThumb, bottom - halfThumb - scrubberHeight,
-                paddingLeft + halfThumb, bottom - halfThumb + scrubberHeight);
+        mScrubber.setBounds(paddingLeft + halfThumb, top + halfThumb - scrubberHeight,
+                paddingLeft + halfThumb, top + halfThumb + scrubberHeight);
 
         //Update the thumb position after size changed
         updateThumbPosFromCurrentProgress();
@@ -594,13 +775,98 @@ public class DiscreteSeekBar extends View {
 
     @Override
     protected synchronized void onDraw(Canvas canvas) {
+
+        int thumbWidth = mThumb.getIntrinsicWidth();
+        int thumbHeight = mThumb.getIntrinsicHeight();
+        int addedThumb = mAddedTouchBounds;
+        int halfThumb = thumbWidth / 2;
+        int paddingLeft = getPaddingLeft() + addedThumb;
+        int paddingRight = getPaddingRight();
+        int bottom = getHeight() - getPaddingBottom() - addedThumb;
+        int trackHeight = Math.max(mTrackHeight / 2, 1);
+        int paddingTop = getPaddingTop();
+        float margin = (canvas.getWidth() - (paddingLeft + getPaddingRight())) / 4;
+        float halfHeight = (halfThumb + (trackHeight * .5f) + mAddedTouchBounds + paddingTop);
+        float h = paddingTop+mAddedTouchBounds+halfThumb;
+        int scrubberHeight = Math.max(mScrubberHeight / 2, 2);
+
         if (!isLollipopOrGreater) {
             mRipple.draw(canvas);
         }
-        super.onDraw(canvas);
+
         mTrack.draw(canvas);
         mScrubber.draw(canvas);
+
+        //float interval = (((getWidth() - halfThumb - paddingRight) - (paddingLeft + halfThumb)) / (mMax - mMin));
+        //float interval = ((getWidth() - halfThumb - paddingRight - addedThumb - paddingLeft - halfThumb) / (mMax - mMin));
+        //float interval = ((getMeasuredWidth()-halfThumb-paddingLeft-paddingRight-addedThumb) / (mMax - mMin));
+        float interval = (((float) mTrack.getBounds().right - (float) mTrack.getBounds().left) /
+                (float) (mMax - mMin));
+        for (int i = mMin; i <= mMax; i++) {
+           /* position.set(paddingLeft+(i*margin)-halfSize,halfHeight-halfSize,
+           paddingLeft+(i*margin)+halfSize, halfHeight+halfSize);  */
+
+            position.set(mTrack.getBounds().left + ((i - mMin) * interval) - halfSize,
+                    h - halfSize,
+                    mTrack.getBounds().left + ((i - mMin) * interval) + halfSize,
+                    h + halfSize);
+
+            if (mDiscretePointsShowAlways) {
+                canvas.drawOval(position, mDiscretePoints);
+            } else if (mDiscretePointsShowOnTouch && mDiscretePointsEnabled) {
+                canvas.drawOval(position, mDiscretePoints);
+            } else {
+                canvas.drawOval(position, mDiscretePointsTran);
+            }
+        }
+
         mThumb.draw(canvas);
+        super.onDraw(canvas);
+        if (textStyle == NONE) {
+
+        } else {
+            drawTextArray(canvas, thumbWidth, halfThumb, mThumb.getBounds().bottom + mTextPaddingTop + mTextSize,mTrack.getBounds().left,interval);
+        }
+    }
+
+    private void drawTextArray(Canvas canvas, int thumbWidth, int halfThumb, float yPos,int left, float intervel) {
+        int lenTextArray = textArray.length;
+        if (lenTextArray == 0)
+            return;
+
+        float currentLeft = left;
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(mtextColor);
+        paint.setTextSize(mTextSize);
+        //paint.setTypeface(); //TODO setTypeface in Discrete Seek Bar
+        //elloWorldTextView2.setTextSize(activity.pixelsToSp(activity, textSize));
+        //paint.m
+
+        for (int i = 0; i < lenTextArray; i++) {
+            /*if((int)getThumbValue(0)==i*(int)scaleStep)
+                paint.setColor(Color.parseColor("#ffff0000"));
+			else
+				paint.setColor(Color.parseColor("#ff22445b"));*/
+
+            float textLen = paint.measureText(textArray[i]);
+
+            if (i == 0) {
+                if (textStyle != NONE && (textStyle == ODD || textStyle == EXTREMES || textStyle == ALL))
+                    canvas.drawText(textArray[i], currentLeft, yPos, paint);
+            } else if (i == lenTextArray - 1) {
+                if (textStyle != NONE)
+                    if ((textStyle  == ALL) || (i % 2 == 0 && textStyle == ODD) || (i % 2 != 0 && textStyle == EVEN) || (textStyle == EXTREMES))
+                        canvas.drawText(textArray[i], currentLeft - textLen, yPos, paint);
+            } else {
+                if (textStyle != 0 && textStyle != 3) {
+                    if ((textStyle == ALL) || (i % 2 == 0 && textStyle == ODD) || (i % 2 != 0 && textStyle == EVEN))
+                        canvas.drawText(textArray[i], currentLeft - (textLen / 2), yPos, paint);
+                }
+            }
+            currentLeft += intervel;
+        }
     }
 
     @Override
@@ -635,8 +901,15 @@ public class DiscreteSeekBar extends View {
     }
 
     private void updateProgressMessage(int value) {
+/*        if(value == 10){
+            mIndicator.setColors(Color.parseColor("#e54c65"),Color.parseColor("#e54c65"));
+        }else {
+            mIndicator.setColors(Color.parseColor("#12e500"),Color.parseColor("#12e500"));
+        }*/
         if (!isInEditMode()) {
-            if (mNumericTransformer.useStringTransform()) {
+            if (mIndicatorTextFromArray) {
+                mIndicator.setValue(textArray[value]);
+            } else if (mNumericTransformer.useStringTransform()) {
                 mIndicator.setValue(mNumericTransformer.transformToString(value));
             } else {
                 mIndicator.setValue(convertValueToMessage(mNumericTransformer.transform(value)));
@@ -674,10 +947,14 @@ public class DiscreteSeekBar extends View {
             return false;
         }
         int actionMasked = MotionEventCompat.getActionMasked(event);
+        Log.d("event.getX()", event.getX() + "");
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
                 mDownX = event.getX();
+                Log.d("mDownX", mDownX + "");
                 startDragging(event, isInScrollingContainer());
+                mDiscretePointsShowOnTouch = true;
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging()) {
@@ -688,10 +965,14 @@ public class DiscreteSeekBar extends View {
                         startDragging(event, false);
                     }
                 }
+                mDiscretePointsShowOnTouch = true;
+                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 stopDragging();
+                mDiscretePointsShowOnTouch = false;
+                invalidate();
                 break;
         }
         return true;
@@ -713,6 +994,7 @@ public class DiscreteSeekBar extends View {
             mIsDragging = true;
             mDragOffset = (bounds.width() / 2) - mAddedTouchBounds;
             updateDragging(ev);
+            Log.d("startDragging", ev.getX() + "");
             //As the thumb may have moved, get the bounds again
             mThumb.copyBounds(bounds);
             bounds.inset(-mAddedTouchBounds, -mAddedTouchBounds);
@@ -817,6 +1099,7 @@ public class DiscreteSeekBar extends View {
     private void updateDragging(MotionEvent ev) {
         setHotspot(ev.getX(), ev.getY());
         int x = (int) ev.getX();
+        Log.d("eaf", x + "");
         Rect oldBounds = mThumb.getBounds();
         int halfThumb = oldBounds.width() / 2;
         int addedThumb = mAddedTouchBounds;
@@ -848,6 +1131,7 @@ public class DiscreteSeekBar extends View {
         int progress = Math.round((scale * (mMax - mMin)) + mMin);
         //we don't want to just call setProgress here to avoid the animation being cancelled,
         //and this position is not bound to a real progress value but interpolated
+        notifyProgress(mValue, true);
         if (progress != getProgress()) {
             mValue = progress;
             notifyProgress(mValue, true);
@@ -968,7 +1252,7 @@ public class DiscreteSeekBar extends View {
     }
 
     public boolean isRtl() {
-        return (ViewCompat.getLayoutDirection(this) == LAYOUT_DIRECTION_RTL) && mMirrorForRtl;
+        return (ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL) && mMirrorForRtl;
     }
 
     @Override
