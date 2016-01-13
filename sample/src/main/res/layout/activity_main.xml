@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:text="@string/app_name"/>
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+    <in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
         app:dsb_value="-2"
         />
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+    <in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/dsbTemp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
         app:dsb_textColor="@color/track_text"
         app:dsb_value="5" />
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+    <in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/lorem_ipsum"/>
-            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+            <in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar
                 android:id="@+id/discrete3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

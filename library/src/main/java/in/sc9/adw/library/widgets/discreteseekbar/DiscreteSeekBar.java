@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar;
+package in.sc9.adw.library.widgets.discreteseekbar;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -42,12 +42,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
 
-import org.adw.library.widgets.discreteseekbar.internal.PopupIndicator;
-import org.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat;
-import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.TrackRectDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.PopupIndicator;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.TrackRectDrawable;
 
 import java.util.Arrays;
 import java.util.Formatter;

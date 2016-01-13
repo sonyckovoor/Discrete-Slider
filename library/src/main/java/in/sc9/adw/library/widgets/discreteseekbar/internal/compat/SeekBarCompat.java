@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal.compat;
+package in.sc9.adw.library.widgets.discreteseekbar.internal.compat;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -24,8 +24,8 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import org.adw.library.widgets.discreteseekbar.internal.drawable.AlmostRippleDrawable;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.AlmostRippleDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
 
 /**
  * Wrapper compatibility class to call some API-Specific methods

@@ -1,10 +1,9 @@
-package org.adw.samples.discreteseekbar;
+package in.sc9.samples.discreteseekbar;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.View;
 
-import org.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
+import in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar;
 
 public class MainActivity extends Activity implements DiscreteSeekBar.OnProgressChangeListener {
     DiscreteSeekBar dsbTemp;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal.compat;
+package in.sc9.adw.library.widgets.discreteseekbar.internal.compat;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -25,7 +25,7 @@ import android.os.Build;
  * for use with AnimatorCompat
  *
  * @hide
- * @see {@link org.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat}
+ * @see {@link in.sc9.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat}
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class AnimatorCompatV11 extends AnimatorCompat {

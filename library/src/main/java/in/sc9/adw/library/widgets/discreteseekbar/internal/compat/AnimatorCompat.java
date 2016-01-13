@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal.compat;
+package in.sc9.adw.library.widgets.discreteseekbar.internal.compat;
 
 import android.os.Build;
 
@@ -28,7 +28,7 @@ import android.os.Build;
  * on API>=11
  * </p>
  * <p>
- * This class is used to provide animation to the {@link org.adw.library.widgets.discreteseekbar.DiscreteSeekBar}
+ * This class is used to provide animation to the {@link in.sc9.adw.library.widgets.discreteseekbar.DiscreteSeekBar}
  * when navigating with the Keypad
  * </p>
  *

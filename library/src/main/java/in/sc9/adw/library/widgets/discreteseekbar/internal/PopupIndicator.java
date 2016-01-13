@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal;
+package in.sc9.adw.library.widgets.discreteseekbar.internal;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -30,8 +30,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
 
 /**
  * Class to manage the floating bubble thing, similar (but quite worse tested than {@link android.widget.PopupWindow}
@@ -44,7 +44,7 @@ import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
  * @see #showIndicator(android.view.View, android.graphics.Rect)
  * @see #dismiss()
  * @see #dismissComplete()
- * @see org.adw.library.widgets.discreteseekbar.internal.PopupIndicator.Floater
+ * @see in.sc9.adw.library.widgets.discreteseekbar.internal.PopupIndicator.Floater
  */
 public class PopupIndicator {
 

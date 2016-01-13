@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal.drawable;
+package in.sc9.adw.library.widgets.discreteseekbar.internal.drawable;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
@@ -23,7 +23,7 @@ import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 /**
- * Simple {@link org.adw.library.widgets.discreteseekbar.internal.drawable.StateDrawable} implementation
+ * Simple {@link in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.StateDrawable} implementation
  * to draw circles/ovals
  *
  * @hide

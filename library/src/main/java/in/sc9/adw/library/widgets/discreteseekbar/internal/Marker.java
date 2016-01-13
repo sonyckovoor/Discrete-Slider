@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.adw.library.widgets.discreteseekbar.internal;
+package in.sc9.adw.library.widgets.discreteseekbar.internal;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -31,16 +31,16 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.adw.library.widgets.discreteseekbar.R;
-import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.R;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
 
 /**
  * {@link android.view.ViewGroup} to be used as the real indicator.
  * <p>
  * I've used this to be able to accommodate the TextView
- * and the {@link org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable}
+ * and the {@link in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable}
  * with the required positions and offsets
  * </p>
  *
