@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Gustavo Claramunt (AnderWeb) 2014.
+  ~ Copyright (c) Sony Cyriac 2016.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,11 +15,11 @@
   -->
 
 <resources>
-    <!-- DiscreteSeekBar specific attributes -->
+    <!-- DiscreteSlider specific attributes -->
     <declare-styleable name="dsb_Theme">
         <attr name="discreteSeekBarStyle" format="reference" />
     </declare-styleable>
-    <declare-styleable name="DiscreteSeekBar">
+    <declare-styleable name="DiscreteSlider">
         <attr name="dsb_min" format="integer|dimension" />
         <attr name="dsb_max" format="integer|dimension" />
         <attr name="dsb_value" format="integer|dimension" />

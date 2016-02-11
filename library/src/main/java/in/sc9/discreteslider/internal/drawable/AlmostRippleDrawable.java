@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar.internal.drawable;
+package in.sc9.discreteslider.internal.drawable;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;

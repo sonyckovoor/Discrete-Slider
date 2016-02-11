@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) Gustavo Claramunt (AnderWeb) 2014.
+  ~ Copyright (c) Sony Cyriac 2016.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
   -->
 
 <manifest
-    package="in.sc9.adw.library.widgets.discreteseekbar">
+    package="in.sc9.discreteslider">
 
     <application>
 

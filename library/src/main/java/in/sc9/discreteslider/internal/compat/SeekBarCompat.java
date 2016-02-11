@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar.internal.compat;
+package in.sc9.discreteslider.internal.compat;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
@@ -24,8 +24,8 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.AlmostRippleDrawable;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.discreteslider.internal.drawable.AlmostRippleDrawable;
+import in.sc9.discreteslider.internal.drawable.MarkerDrawable;
 
 /**
  * Wrapper compatibility class to call some API-Specific methods
@@ -49,7 +49,7 @@ public class SeekBarCompat {
     }
 
     /**
-     * Our DiscreteSeekBar implementation uses a circular drawable on API < 21
+     * Our DiscreteSlider implementation uses a circular drawable on API < 21
      * because we don't set it as Background, but draw it ourselves
      *
      * @param colorStateList
@@ -64,7 +64,7 @@ public class SeekBarCompat {
     }
 
     /**
-     * As our DiscreteSeekBar implementation uses a circular drawable on API < 21
+     * As our DiscreteSlider implementation uses a circular drawable on API < 21
      * we want to use the same method to set its bounds as the Ripple's hotspot bounds.
      *
      * @param drawable

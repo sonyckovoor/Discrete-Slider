@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar.internal;
+package in.sc9.discreteslider.internal;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -31,16 +31,16 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import in.sc9.adw.library.widgets.discreteseekbar.R;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
+import in.sc9.discreteslider.R;
+import in.sc9.discreteslider.internal.compat.SeekBarCompat;
+import in.sc9.discreteslider.internal.drawable.MarkerDrawable;
+import in.sc9.discreteslider.internal.drawable.ThumbDrawable;
 
 /**
  * {@link android.view.ViewGroup} to be used as the real indicator.
  * <p>
  * I've used this to be able to accommodate the TextView
- * and the {@link in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable}
+ * and the {@link in.sc9.discreteslider.internal.drawable.MarkerDrawable}
  * with the required positions and offsets
  * </p>
  *
@@ -74,11 +74,11 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
     public Marker(Context context, AttributeSet attrs, int defStyleAttr, String maxValue) {
         super(context, attrs, defStyleAttr);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSlider,
                 R.attr.discreteSeekBarStyle, R.style.Widget_DiscreteSeekBar);
 
         int padding = (int) (PADDING_DP * displayMetrics.density) * 2;
-        int textAppearanceId = a.getResourceId(R.styleable.DiscreteSeekBar_dsb_indicatorTextAppearance,
+        int textAppearanceId = a.getResourceId(R.styleable.DiscreteSlider_dsb_indicatorTextAppearance,
                 R.style.Widget_DiscreteIndicatorTextAppearance);
         mNumber = new TextView(context);
         //Add some padding to this textView so the bubble has some space to breath
@@ -99,14 +99,14 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
         mSeparation = (int) (SEPARATION_DP * displayMetrics.density);
         int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
-        ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
+        ColorStateList color = a.getColorStateList(R.styleable.DiscreteSlider_dsb_indicatorColor);
         mMarkerDrawable = new MarkerDrawable(color, thumbSize);
         mMarkerDrawable.setCallback(this);
         mMarkerDrawable.setMarkerListener(this);
         mMarkerDrawable.setExternalOffset(padding);
 
         //Elevation for anroid 5+
-        float elevation = a.getDimension(R.styleable.DiscreteSeekBar_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
+        float elevation = a.getDimension(R.styleable.DiscreteSlider_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
         ViewCompat.setElevation(this, elevation);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             SeekBarCompat.setOutlineProvider(this, mMarkerDrawable);

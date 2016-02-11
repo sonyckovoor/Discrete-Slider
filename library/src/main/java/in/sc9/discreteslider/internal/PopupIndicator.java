@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar.internal;
+package in.sc9.discreteslider.internal;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -30,8 +30,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
+import in.sc9.discreteslider.internal.compat.SeekBarCompat;
+import in.sc9.discreteslider.internal.drawable.MarkerDrawable;
 
 /**
  * Class to manage the floating bubble thing, similar (but quite worse tested than {@link android.widget.PopupWindow}
@@ -44,16 +44,16 @@ import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawab
  * @see #showIndicator(android.view.View, android.graphics.Rect)
  * @see #dismiss()
  * @see #dismissComplete()
- * @see in.sc9.adw.library.widgets.discreteseekbar.internal.PopupIndicator.Floater
+ * @see in.sc9.discreteslider.internal.PopupIndicator.Floater
  */
 public class PopupIndicator {
 
     private final WindowManager mWindowManager;
     private boolean mShowing;
     private Floater mPopupView;
-    //Outside listener for the DiscreteSeekBar to get MarkerDrawable animation events.
+    //Outside listener for the DiscreteSlider to get MarkerDrawable animation events.
     //The whole chain of events goes this way:
-    //MarkerDrawable->Marker->Floater->mListener->DiscreteSeekBar....
+    //MarkerDrawable->Marker->Floater->mListener->DiscreteSlider....
     //... phew!
     private MarkerDrawable.MarkerAnimationListener mListener;
     private int[] mDrawingLocation = new int[2];
@@ -176,7 +176,7 @@ public class PopupIndicator {
         p.type = WindowManager.LayoutParams.TYPE_APPLICATION_PANEL;
         p.token = token;
         p.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN;
-        p.setTitle("DiscreteSeekBar Indicator:" + Integer.toHexString(hashCode()));
+        p.setTitle("DiscreteSlider Indicator:" + Integer.toHexString(hashCode()));
 
         return p;
     }

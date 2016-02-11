@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Gustavo Claramunt (AnderWeb) 2014.
+ * Copyright (c) Sony Cyriac 2016.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar;
+package in.sc9.discreteslider;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -42,39 +42,39 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
 
-import in.sc9.adw.library.widgets.discreteseekbar.internal.PopupIndicator;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.AnimatorCompat;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
-import in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.TrackRectDrawable;
+import in.sc9.discreteslider.internal.PopupIndicator;
+import in.sc9.discreteslider.internal.compat.AnimatorCompat;
+import in.sc9.discreteslider.internal.compat.SeekBarCompat;
+import in.sc9.discreteslider.internal.drawable.MarkerDrawable;
+import in.sc9.discreteslider.internal.drawable.ThumbDrawable;
+import in.sc9.discreteslider.internal.drawable.TrackRectDrawable;
 
 import java.util.Arrays;
 import java.util.Formatter;
 import java.util.Locale;
 
-public class DiscreteSeekBar extends View {
+public class DiscreteSlider extends View {
 
     /**
      * Interface to propagate seekbar change event
      */
     public interface OnProgressChangeListener {
         /**
-         * When the {@link DiscreteSeekBar} value changes
+         * When the {@link DiscreteSlider} value changes
          *
-         * @param seekBar  The DiscreteSeekBar
+         * @param seekBar  The DiscreteSlider
          * @param value    the new value
          * @param fromUser if the change was made from the user or not (i.e. the developer calling {@link #setProgress(int)}
          */
-        public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
+        public void onProgressChanged(DiscreteSlider seekBar, int value, boolean fromUser);
 
-        public void onStartTrackingTouch(DiscreteSeekBar seekBar);
+        public void onStartTrackingTouch(DiscreteSlider seekBar);
 
-        public void onStopTrackingTouch(DiscreteSeekBar seekBar);
+        public void onStopTrackingTouch(DiscreteSlider seekBar);
     }
 
     /**
-     * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
+     * Interface to transform the current internal value of this DiscreteSlider to anther one for the visualization.
      * <p/>
      * This will be used on the floating bubble to display a different value if needed.
      * <p/>
@@ -82,7 +82,7 @@ public class DiscreteSeekBar extends View {
      * value seen by the user
      *
      * @see #setIndicatorFormatter(String)
-     * @see #setNumericTransformer(DiscreteSeekBar.NumericTransformer)
+     * @see #setNumericTransformer(DiscreteSlider.NumericTransformer)
      */
     public static abstract class NumericTransformer {
         /**
@@ -244,15 +244,15 @@ public class DiscreteSeekBar extends View {
 
     private String[] textArray;
 
-    public DiscreteSeekBar(Context context) {
+    public DiscreteSlider(Context context) {
         this(context, null);
     }
 
-    public DiscreteSeekBar(Context context, AttributeSet attrs) {
+    public DiscreteSlider(Context context, AttributeSet attrs) {
         this(context, attrs, R.attr.discreteSeekBarStyle);
     }
 
-    public DiscreteSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public DiscreteSlider(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         setFocusable(true);
         setWillNotDraw(false);
@@ -267,19 +267,19 @@ public class DiscreteSeekBar extends View {
         int touchBounds = (int) (density * 32);
         mAddedTouchBounds = (touchBounds - thumbSize) / 2;
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSlider,
                 defStyleAttr, R.style.Widget_DiscreteSeekBar);
 
         int max = 100;
         int min = 0;
         int value = 0;
-        mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
-        mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
-        mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
-        mIndicatorTextFromArray = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorTextFromArray, mIndicatorTextFromArray);
-        int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
-        int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
-        int indexValue = R.styleable.DiscreteSeekBar_dsb_value;
+        mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSlider_dsb_mirrorForRtl, mMirrorForRtl);
+        mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSlider_dsb_allowTrackClickToDrag, mAllowTrackClick);
+        mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSlider_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
+        mIndicatorTextFromArray = a.getBoolean(R.styleable.DiscreteSlider_dsb_indicatorTextFromArray, mIndicatorTextFromArray);
+        int indexMax = R.styleable.DiscreteSlider_dsb_max;
+        int indexMin = R.styleable.DiscreteSlider_dsb_min;
+        int indexValue = R.styleable.DiscreteSlider_dsb_value;
         final TypedValue out = new TypedValue();
         //Not sure why, but we wanted to be able to use dimensions here...
         if (a.getValue(indexMax, out)) {
@@ -309,20 +309,20 @@ public class DiscreteSeekBar extends View {
         mValue = Math.max(min, Math.min(max, value));
         updateKeyboardRange();
 
-        mIndicatorFormatter = a.getString(R.styleable.DiscreteSeekBar_dsb_indicatorFormatter);
+        mIndicatorFormatter = a.getString(R.styleable.DiscreteSlider_dsb_indicatorFormatter);
 
-        mDiscretePointsEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_discretePointsEnabled, false);
-        mDiscretePointsShowAlways = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_discretePointsShowAlways, false);
+        mDiscretePointsEnabled = a.getBoolean(R.styleable.DiscreteSlider_dsb_discretePointsEnabled, false);
+        mDiscretePointsShowAlways = a.getBoolean(R.styleable.DiscreteSlider_dsb_discretePointsShowAlways, false);
 
-        ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_trackColor);
-        ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_progressColor);
-        ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_rippleColor);
-        int discretePointColor = a.getColor(R.styleable.DiscreteSeekBar_dsb_discretePointsColor, Color.RED);
+        ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSlider_dsb_trackColor);
+        ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSlider_dsb_progressColor);
+        ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSlider_dsb_rippleColor);
+        int discretePointColor = a.getColor(R.styleable.DiscreteSlider_dsb_discretePointsColor, Color.RED);
 
-        mtextColor = a.getColor(R.styleable.DiscreteSeekBar_dsb_textColor, Color.BLACK);
-        mTextSize = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_TextSize, mTextSize);
-        mTextPaddingTop = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_TextSize, mTextPaddingTop);
-        textStyle = a.getInt(R.styleable.DiscreteSeekBar_dsb_TextStyle, textStyle);
+        mtextColor = a.getColor(R.styleable.DiscreteSlider_dsb_textColor, Color.BLACK);
+        mTextSize = a.getDimensionPixelSize(R.styleable.DiscreteSlider_dsb_TextSize, mTextSize);
+        mTextPaddingTop = a.getDimensionPixelSize(R.styleable.DiscreteSlider_dsb_TextSize, mTextPaddingTop);
+        textStyle = a.getInt(R.styleable.DiscreteSlider_dsb_TextStyle, textStyle);
 
         boolean editMode = isInEditMode();
         if (editMode || rippleColor == null) {
@@ -401,7 +401,7 @@ public class DiscreteSeekBar extends View {
      *
      * @param formatter
      * @see String#format(String, Object...)
-     * @see #setNumericTransformer(DiscreteSeekBar.NumericTransformer)
+     * @see #setNumericTransformer(DiscreteSlider.NumericTransformer)
      */
     public void setIndicatorFormatter(@Nullable String formatter) {
         mIndicatorFormatter = formatter;
@@ -409,7 +409,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the current {@link DiscreteSeekBar.NumericTransformer}
+     * Sets the current {@link DiscreteSlider.NumericTransformer}
      *
      * @param transformer
      * @see #getNumericTransformer()
@@ -428,7 +428,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Retrieves the current {@link DiscreteSeekBar.NumericTransformer}
+     * Retrieves the current {@link DiscreteSlider.NumericTransformer}
      *
      * @return NumericTransformer
      * @see #setNumericTransformer
@@ -438,7 +438,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the maximum value for this DiscreteSeekBar
+     * Sets the maximum value for this DiscreteSlider
      * if the supplied argument is smaller than the Current MIN value,
      * the MIN value will be set to MAX-1
      * <p/>
@@ -467,7 +467,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the minimum value for this DiscreteSeekBar
+     * Sets the minimum value for this DiscreteSlider
      * if the supplied argument is bigger than the Current MAX value,
      * the MAX value will be set to MIN+1
      * <p>
@@ -495,7 +495,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the current progress for this DiscreteSeekBar
+     * Sets the current progress for this DiscreteSlider
      * The supplied argument will be capped to the current MIN-MAX range
      *
      * @param progress
@@ -507,7 +507,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the current progress for this DiscreteSeekBar
+     * Sets the current progress for this DiscreteSlider
      * The supplied argument should be present in the array of values
      *
      * @param value
@@ -555,11 +555,11 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets a listener to receive notifications of changes to the DiscreteSeekBar's progress level. Also
-     * provides notifications of when the DiscreteSeekBar shows/hides the bubble indicator.
+     * Sets a listener to receive notifications of changes to the DiscreteSlider's progress level. Also
+     * provides notifications of when the DiscreteSlider shows/hides the bubble indicator.
      *
      * @param listener The seek bar notification listener
-     * @see DiscreteSeekBar.OnProgressChangeListener
+     * @see DiscreteSlider.OnProgressChangeListener
      */
     public void setOnProgressChangeListener(@Nullable OnProgressChangeListener listener) {
         mPublicChangeListener = listener;
@@ -666,7 +666,7 @@ public class DiscreteSeekBar extends View {
 
     private void notifyProgress(int value, boolean fromUser) {
         if (mPublicChangeListener != null) {
-            mPublicChangeListener.onProgressChanged(DiscreteSeekBar.this, value, fromUser);
+            mPublicChangeListener.onProgressChanged(DiscreteSlider.this, value, fromUser);
         }
         onValueChanged(value);
     }
@@ -680,7 +680,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * When the {@link DiscreteSeekBar} enters pressed or focused state
+     * When the {@link DiscreteSlider} enters pressed or focused state
      * the bubble with the value will be shown, and this method called
      * <p>
      * Subclasses may override this to add functionality around this event
@@ -690,7 +690,7 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * When the {@link DiscreteSeekBar} exits pressed or focused state
+     * When the {@link DiscreteSlider} exits pressed or focused state
      * the bubble with the value will be hidden, and this method called
      * <p>
      * Subclasses may override this to add functionality around this event
@@ -700,10 +700,10 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * When the {@link DiscreteSeekBar} value changes this method is called
+     * When the {@link DiscreteSlider} value changes this method is called
      * <p>
      * Subclasses may override this to add functionality around this event
-     * without having to specify a {@link DiscreteSeekBar.OnProgressChangeListener}
+     * without having to specify a {@link DiscreteSlider.OnProgressChangeListener}
      * </p>
      */
     protected void onValueChanged(int value) {

@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package in.sc9.adw.library.widgets.discreteseekbar.internal.drawable;
+package in.sc9.discreteslider.internal.drawable;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 
 /**
- * Simple {@link in.sc9.adw.library.widgets.discreteseekbar.internal.drawable.StateDrawable} implementation
- * to draw rectangles
+ * Simple {@link in.sc9.discreteslider.internal.drawable.StateDrawable} implementation
+ * to draw circles/ovals
  *
  * @hide
  */
-public class TrackRectDrawable extends StateDrawable {
-    public TrackRectDrawable(@NonNull ColorStateList tintStateList) {
+public class TrackOvalDrawable extends StateDrawable {
+    private RectF mRectF = new RectF();
+
+    public TrackOvalDrawable(@NonNull ColorStateList tintStateList) {
         super(tintStateList);
     }
 
     @Override
     void doDraw(Canvas canvas, Paint paint) {
-        canvas.drawRect(getBounds(), paint);
+        mRectF.set(getBounds());
+        canvas.drawOval(mRectF, paint);
     }
 
 }
